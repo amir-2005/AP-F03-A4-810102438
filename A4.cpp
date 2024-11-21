@@ -29,6 +29,39 @@ private:
     int wrong_answers;
 };
 
+class Box
+{
+public:
+    void addToCards(shared_ptr<Card> card)
+    {
+        card->forgetWrongAns();
+        cards.push_back(card);
+    }
+
+    void sendToNext(shared_ptr<Card> card, Box *box)
+    {
+        cards.remove(card);
+        if (box != nullptr) // it means that current box is monthly and cart will be discarded
+            box->addToCards(card);
+    }
+
+    void sendToPerv(shared_ptr<Card> card, Box *box)
+    {
+        if (box != nullptr) // it means that current box is daily and cart cannot be removed
+        {
+            cards.remove(card);
+            box->addToCards(card);
+        }
+    }
+
+    int cardsNumber()
+    {
+        return cards.size();
+    }
+
+private:
+    list<shared_ptr<Card>> cards;
+};
 
 int main()
 {
