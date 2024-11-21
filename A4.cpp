@@ -3,6 +3,8 @@
 
 using namespace std;
 
+const std::string ADD_COMMAND = "add_flashcard";
+
 class Card
 {
 public:
@@ -61,6 +63,40 @@ public:
 
 private:
     list<shared_ptr<Card>> cards;
+};
+
+class Leitner
+{
+public:
+
+    void getFlashcards(string input)
+    {
+        int n = stoi(input.substr(ADD_COMMAND.size() + 1));
+        string question, answer;
+
+        for (int i = 0; i < n; i++)
+        {
+            getline(cin, question);
+            getline(cin, answer);
+            addNewCard(question, answer);
+        }
+        cout << "flashcards added to the daily box" << endl;
+    }
+
+private:
+    Box daily;
+    Box three_day;
+    Box weekly;
+    Box monthly;
+    int day = 1;
+    int streak = 0;
+
+    void addNewCard(string question, string answer)
+    {
+        shared_ptr<Card> card_ptr = make_shared<Card>(question, answer);
+        daily.addToCards(card_ptr);
+    }
+
 };
 
 int main()
