@@ -4,6 +4,11 @@
 using namespace std;
 
 const std::string ADD_COMMAND = "add_flashcard";
+const std::string REVIEW_COMMAND = "review_today";
+const std::string STREAK_COMMAND = "streak";
+const std::string NEXTDAY_COMMAND = "next_day";
+const std::string REPORT_COMMAND = "get_report";
+const std::string PROGRESS_COMMAND = "get_progress_report";
 
 class Card
 {
@@ -101,6 +106,36 @@ private:
 
 int main()
 {
+    Leitner main;
+    string input;
+
+    while (getline(cin, input))
+    {
+        if (input.find(ADD_COMMAND) != string::npos)
+        {
+            main.getFlashcards(input);
+        }
+        if (input.find(REVIEW_COMMAND) != string::npos)
+        {
+
+        }
+        if (input.find(STREAK_COMMAND) != string::npos)
+        {
+
+        }
+        if (input.find(NEXTDAY_COMMAND) != string::npos)
+        {
+
+        }
+        if (input.find(REPORT_COMMAND) != string::npos)
+        {
+
+        }
+        if (input.find(PROGRESS_COMMAND) != string::npos)
+        {
+            
+        }
+    }
 
     return 1;
 }
