@@ -73,7 +73,6 @@ private:
 class Leitner
 {
 public:
-
     void getFlashcards(string input)
     {
         int n = stoi(input.substr(ADD_COMMAND.size() + 1));
@@ -95,6 +94,7 @@ private:
     Box monthly;
     int day = 1;
     int streak = 0;
+    vector<pair<int, int>> correct_wrong_number = {{0, 0}};
 
     void addNewCard(string question, string answer)
     {
@@ -102,6 +102,35 @@ private:
         daily.addToCards(card_ptr);
     }
 
+    void askQuestions(list<shared_ptr<Card>> cards, Box *box, Box *next, Box *perv)
+    {
+        string answer;
+        for (auto card : cards)
+        {
+            cout << "Flashcard: " << card->getQuestion() << endl
+                 << "Your answer: ";
+            getline(cin, answer);
+            if (answer == card->getAnswer())
+            {
+                correct_wrong_number.back().first += 1;
+                cout << endl
+                     << "Your answer was correct! Well done, keep it up!" << endl;
+                box->sendToNext(card, next);
+            }
+            else
+            {
+                correct_wrong_number.back().second += 1;
+                cout << endl
+                     << "Your answer was incorrect. Don't worry! The correct answer is: ";
+                cout << card->getAnswer() << ". Keep practicing!" << endl;
+                card->incWrongAns();
+                if (card->getWrongAns() == 2)
+                {
+                    box->sendToPerv(card, perv);
+                }
+            }
+        }
+    }
 };
 
 int main()
@@ -117,23 +146,18 @@ int main()
         }
         if (input.find(REVIEW_COMMAND) != string::npos)
         {
-
         }
         if (input.find(STREAK_COMMAND) != string::npos)
         {
-
         }
         if (input.find(NEXTDAY_COMMAND) != string::npos)
         {
-
         }
         if (input.find(REPORT_COMMAND) != string::npos)
         {
-
         }
         if (input.find(PROGRESS_COMMAND) != string::npos)
         {
-            
         }
     }
 
