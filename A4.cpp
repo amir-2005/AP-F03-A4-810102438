@@ -213,26 +213,23 @@ private:
         string answer;
         for (auto card : cards)
         {
-            if (card->is_reviewed == true)
-                continue;
-
+            if (card->is_reviewed == true) continue;
             card->is_reviewed = true;
 
-            cout << "Flashcard: " << card->getQuestion() << endl
-                 << "Your answer: ";
+            cout << "Flashcard: " << card->getQuestion() << endl<< "Your answer: ";
+
             getline(cin, answer);
+            
             if (answer == card->getAnswer())
             {
                 correct_wrong_number.back().first += 1;
-                cout << endl
-                     << "Your answer was correct! Well done, keep it up!" << endl;
+                cout << endl << "Your answer was correct! Well done, keep it up!" << endl;
                 box->sendToNext(card, next);
             }
             else
             {
                 correct_wrong_number.back().second += 1;
-                cout << endl
-                     << "Your answer was incorrect. Don't worry! The correct answer is: ";
+                cout << endl << "Your answer was incorrect. Don't worry! The correct answer is: ";
                 cout << card->getAnswer() << ". Keep practicing!" << endl;
                 card->incWrongAns();
                 if (card->getWrongAns() == 2)
@@ -310,6 +307,10 @@ int main()
         }
         if (input.find(REPORT_COMMAND) != string::npos)
         {
+            istringstream stream(input.substr(REPORT_COMMAND.length()));
+            int start, end;
+            stream >> start >> end;
+            main.printReport(start, end);
         }
         if (input.find(PROGRESS_COMMAND) != string::npos)
         {
