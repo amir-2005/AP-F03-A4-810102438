@@ -30,6 +30,13 @@ public:
 
     void forgetWrongAns() { wrong_answers = 0; }
 
+    bool operator==(const Card &other)
+    {
+        if (question == other.question && answer == other.answer)
+            return true;
+        return false;
+    }
+
 private:
     string question;
     string answer;
@@ -64,7 +71,7 @@ public:
     list<shared_ptr<Card>> getCards(int n)
     {
         list<shared_ptr<Card>> sublist(cards.begin(), next(cards.begin(), n));
-        return sublist;     
+        return sublist;
     }
 
     int cardsNumber()
