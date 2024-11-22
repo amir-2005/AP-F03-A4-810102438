@@ -61,6 +61,12 @@ public:
         }
     }
 
+    list<shared_ptr<Card>> getCards(int n)
+    {
+        list<shared_ptr<Card>> sublist(cards.begin(), next(cards.begin(), n));
+        return sublist;     
+    }
+
     int cardsNumber()
     {
         return cards.size();
@@ -85,6 +91,57 @@ public:
             addNewCard(question, answer);
         }
         cout << "flashcards added to the daily box" << endl;
+    }
+
+    void reviewToday(int number)
+    {
+        if (number != 0 && day % 30 == 0)
+        {
+            int n = monthly.cardsNumber();
+            if (number <= n)
+            {
+                askQuestions(monthly.getCards(number), &monthly, nullptr, &weekly);
+                number = 0;
+            }
+            else
+            {
+                askQuestions(monthly.getCards(n), &monthly, nullptr, &weekly);
+                number -= n;
+            }
+        }
+        if (number != 0 && day % 7 == 0)
+        {
+            int n = weekly.cardsNumber();
+            if (number <= n)
+            {
+                askQuestions(weekly.getCards(number), &weekly, &monthly, &three_day);
+                number = 0;
+            }
+            else
+            {
+                askQuestions(weekly.getCards(n), &weekly, &monthly, &three_day);
+                number -= n;
+            }
+        }
+        if (number != 0 && day % 3 == 0)
+        {
+            int n = three_day.cardsNumber();
+            if (number <= n)
+            {
+                askQuestions(three_day.getCards(number), &three_day, &weekly, &daily);
+                number = 0;
+            }
+            else
+            {
+                askQuestions(three_day.getCards(n), &three_day, &weekly, &daily);
+                number -= n;
+            }
+        }
+        if (number != 0)
+            askQuestions(daily.getCards(number), &daily, &three_day, nullptr);
+
+        cout << "You’ve completed today’s review! Keep the momentum going and continue building your knowledge, one flashcard at a time!" << endl;
+        streak++;
     }
 
 private:
