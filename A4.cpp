@@ -86,6 +86,12 @@ private:
 class Leitner
 {
 public:
+    void showStreak()
+    {
+        cout << "Your current streak is: " << streak << endl;
+        cout << "Keep going!" << endl;
+    }
+
     void getFlashcards(string input)
     {
         int n = stoi(input.substr(ADD_COMMAND.size() + 1));
@@ -215,6 +221,7 @@ int main()
         }
         if (input.find(STREAK_COMMAND) != string::npos)
         {
+            main.showStreak();
         }
         if (input.find(NEXTDAY_COMMAND) != string::npos)
         {
