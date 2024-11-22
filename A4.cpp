@@ -210,6 +210,8 @@ int main()
         }
         if (input.find(REVIEW_COMMAND) != string::npos)
         {
+            int n = stoi(input.substr(REVIEW_COMMAND.size() + 1));
+            main.reviewToday(n);
         }
         if (input.find(STREAK_COMMAND) != string::npos)
         {
