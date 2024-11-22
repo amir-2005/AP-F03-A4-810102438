@@ -37,6 +37,8 @@ public:
         return false;
     }
 
+    bool is_reviewed = false;
+
 private:
     string question;
     string answer;
@@ -189,6 +191,11 @@ private:
         string answer;
         for (auto card : cards)
         {
+            if (card->is_reviewed == true)
+                continue;
+
+            card->is_reviewed = true;
+
             cout << "Flashcard: " << card->getQuestion() << endl
                  << "Your answer: ";
             getline(cin, answer);
