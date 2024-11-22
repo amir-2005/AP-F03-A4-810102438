@@ -48,38 +48,11 @@ private:
 class Box
 {
 public:
-    void addToCards(shared_ptr<Card> card)
-    {
-        card->forgetWrongAns();
-        cards.push_back(card);
-    }
-
-    void sendToNext(shared_ptr<Card> card, Box *box)
-    {
-        cards.remove(card);
-        if (box != nullptr) // it means that current box is monthly and cart will be discarded
-            box->addToCards(card);
-    }
-
-    void sendToPerv(shared_ptr<Card> card, Box *box)
-    {
-        if (box != nullptr) // it means that current box is daily and cart cannot be removed
-        {
-            cards.remove(card);
-            box->addToCards(card);
-        }
-    }
-
-    list<shared_ptr<Card>> getCards(int n)
-    {
-        list<shared_ptr<Card>> sublist(cards.begin(), next(cards.begin(), n));
-        return sublist;
-    }
-
-    int cardsNumber()
-    {
-        return cards.size();
-    }
+    void addToCards(shared_ptr<Card> card);
+    void sendToNext(shared_ptr<Card> card, Box *box);
+    void sendToPerv(shared_ptr<Card> card, Box *box);
+    list<shared_ptr<Card>> getCards(int n);
+    int cardsNumber() { return cards.size(); }
 
 private:
     list<shared_ptr<Card>> cards;
@@ -88,13 +61,66 @@ private:
 class Leitner
 {
 public:
-    void showStreak()
+    void showStreak();
+    void getFlashcards(string input);
+    void reviewToday(int number);
+    void nextDay();
+    void printReport(int start, int end);
+    void printProgressReport();
+
+private:
+    Box daily;
+    Box three_day;
+    Box weekly;
+    Box monthly;
+    int day = 1;
+    int streak = 0;
+    bool been_reviewed = false;
+    int mastered_number = 0;
+    vector<pair<int, int>> correct_wrong_number = {{0, 0}};
+
+    void addNewCard(string question, string answer);
+    void askQuestions(list<shared_ptr<Card>> cards, Box *box, Box *next, Box *perv);
+    void nextDayMessage();
+    void moveUnrevieweds();
+};
+
+void Box::addToCards(shared_ptr<Card> card)
+    {
+        card->forgetWrongAns();
+        cards.push_back(card);
+    }
+
+void Box::sendToNext(shared_ptr<Card> card, Box *box)
+    {
+        cards.remove(card);
+        if (box != nullptr) // it means that current box is monthly and cart will be discarded
+            box->addToCards(card);
+    }
+
+void Box::sendToPerv(shared_ptr<Card> card, Box *box)
+    {
+        if (box != nullptr) // it means that current box is daily and cart cannot be removed
+        {
+            cards.remove(card);
+            box->addToCards(card);
+        }
+    }
+
+list<shared_ptr<Card>> Box::getCards(int n)
+    {
+        list<shared_ptr<Card>> sublist(cards.begin(), next(cards.begin(), n));
+        return sublist;
+    }
+
+
+void Leitner::showStreak()
     {
         cout << "Your current streak is: " << streak << endl;
         cout << "Keep going!" << endl;
     }
 
-    void getFlashcards(string input)
+void Leitner::getFlashcards(string input)
     {
         int n = stoi(input.substr(ADD_COMMAND.size() + 1));
         string question, answer;
@@ -108,7 +134,7 @@ public:
         cout << "flashcards added to the daily box" << endl;
     }
 
-    void reviewToday(int number)
+void Leitner::reviewToday(int number)
     {
         if (number != 0 && day % 30 == 0)
         {
@@ -160,7 +186,7 @@ public:
         streak++;
     }
 
-    void nextDay()
+void Leitner::nextDay()
     {
         moveUnrevieweds();
         day++;
@@ -171,7 +197,7 @@ public:
         nextDayMessage();
     }
 
-    void printReport(int start, int end)
+void Leitner::printReport(int start, int end)
     {
         if (start == end)
             cout << "Day: " << start << endl;
@@ -192,7 +218,7 @@ public:
         cout << "Total: " << total_correct + total_wrong << endl;
     }
 
-    void printProgressReport()
+void Leitner::printProgressReport()
     {
         int total_participate = 0;
         for (auto i : correct_wrong_number)
@@ -209,24 +235,13 @@ public:
         cout << endl << "Keep up the great work! You're making steady progress toward mastering your flashcards." << endl;
     }
 
-private:
-    Box daily;
-    Box three_day;
-    Box weekly;
-    Box monthly;
-    int day = 1;
-    int streak = 0;
-    bool been_reviewed = false;
-    int mastered_number = 0;
-    vector<pair<int, int>> correct_wrong_number = {{0, 0}};
-
-    void addNewCard(string question, string answer)
+void Leitner::addNewCard(string question, string answer)
     {
         shared_ptr<Card> card_ptr = make_shared<Card>(question, answer);
         daily.addToCards(card_ptr);
     }
 
-    void askQuestions(list<shared_ptr<Card>> cards, Box *box, Box *next, Box *perv)
+void Leitner::askQuestions(list<shared_ptr<Card>> cards, Box *box, Box *next, Box *perv)
     {
         string answer;
         for (auto card : cards)
@@ -263,14 +278,14 @@ private:
         }
     }
 
-    void nextDayMessage()
+void Leitner::nextDayMessage()
     {
         cout << "Good morning! Today is day " << day << " of our journey." << endl;
         cout << "Your current streak is: " << streak << endl;
         cout << "Start reviewing to keep your streak!" << endl;
     }
 
-    void moveUnrevieweds()
+void Leitner::moveUnrevieweds()
     {
         if (day % 3 == 0)
             for (auto card : three_day.getCards(three_day.cardsNumber()))
@@ -302,7 +317,6 @@ private:
         for (auto card : monthly.getCards(monthly.cardsNumber()))
             card->is_reviewed = false;
     }
-};
 
 int main()
 {
