@@ -162,6 +162,7 @@ public:
 
     void nextDay()
     {
+        moveUnrevieweds();
         day++;
         if (!been_reviewed)
             streak = 0;
@@ -226,6 +227,39 @@ private:
         cout << "Good morning! Today is day " << day << " of our journey." << endl;
         cout << "Your current streak is: " << streak << endl;
         cout << "Start reviewing to keep your streak!" << endl;
+    }
+
+    void moveUnrevieweds()
+    {
+        if (day % 3 == 0)
+            for (auto card : three_day.getCards(three_day.cardsNumber()))
+            {
+                if (day % 3 == 0 && card->is_reviewed == false)
+                    three_day.sendToPerv(card, &daily);
+            }
+
+        if (day % 7 == 0)
+            for (auto card : weekly.getCards(weekly.cardsNumber()))
+            {
+                if (card->is_reviewed == false)
+                    weekly.sendToPerv(card, &three_day);
+            }
+
+        if (day % 30 == 0)
+            for (auto card : monthly.getCards(monthly.cardsNumber()))
+            {
+                if (card->is_reviewed == false)
+                    monthly.sendToPerv(card, &weekly);
+            }
+
+        for (auto card : daily.getCards(daily.cardsNumber()))
+            card->is_reviewed = false;
+        for (auto card : three_day.getCards(three_day.cardsNumber()))
+            card->is_reviewed = false;
+        for (auto card : weekly.getCards(weekly.cardsNumber()))
+            card->is_reviewed = false;
+        for (auto card : monthly.getCards(monthly.cardsNumber()))
+            card->is_reviewed = false;
     }
 };
 
