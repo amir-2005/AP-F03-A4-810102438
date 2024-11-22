@@ -337,6 +337,7 @@ int main()
         }
         if (input.find(PROGRESS_COMMAND) != string::npos)
         {
+            main.printProgressReport();
         }
     }
 
