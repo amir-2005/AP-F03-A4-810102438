@@ -171,6 +171,27 @@ public:
         nextDayMessage();
     }
 
+    void printReport(int start, int end)
+    {
+        if (start == end)
+            cout << "Day: " << start << endl;
+        else
+            cout << "Day: " << start << " to " << end << endl;
+
+        int total_correct = 0;
+        int total_wrong = 0;
+
+        for (int i = start - 1; i < end; i++)
+        {
+            total_correct += correct_wrong_number[i].first;
+            total_wrong += correct_wrong_number[i].second;
+        }
+
+        cout << "Correct Answers: " << total_correct << endl;
+        cout << "Incorrect Answers: " << total_wrong << endl;
+        cout << "Total: " << total_correct + total_wrong << endl;
+    }
+
 private:
     Box daily;
     Box three_day;
