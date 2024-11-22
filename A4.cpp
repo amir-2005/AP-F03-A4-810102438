@@ -154,7 +154,18 @@ public:
             askQuestions(daily.getCards(number), &daily, &three_day, nullptr);
 
         cout << "You’ve completed today’s review! Keep the momentum going and continue building your knowledge, one flashcard at a time!" << endl;
+        been_reviewed = true;
         streak++;
+    }
+
+    void nextDay()
+    {
+        day++;
+        if (!been_reviewed)
+            streak = 0;
+        been_reviewed = false;
+        correct_wrong_number.emplace_back(0, 0);
+        nextDayMessage();
     }
 
 private:
@@ -164,6 +175,7 @@ private:
     Box monthly;
     int day = 1;
     int streak = 0;
+    bool been_reviewed = false;
     vector<pair<int, int>> correct_wrong_number = {{0, 0}};
 
     void addNewCard(string question, string answer)
@@ -201,6 +213,13 @@ private:
             }
         }
     }
+
+    void nextDayMessage()
+    {
+        cout << "Good morning! Today is day " << day << " of our journey." << endl;
+        cout << "Your current streak is: " << streak << endl;
+        cout << "Start reviewing to keep your streak!" << endl;
+    }
 };
 
 int main()
@@ -225,6 +244,7 @@ int main()
         }
         if (input.find(NEXTDAY_COMMAND) != string::npos)
         {
+            main.nextDay();
         }
         if (input.find(REPORT_COMMAND) != string::npos)
         {
