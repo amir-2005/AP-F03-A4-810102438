@@ -192,6 +192,23 @@ public:
         cout << "Total: " << total_correct + total_wrong << endl;
     }
 
+    void printProgressReport()
+    {
+        int total_participate = 0;
+        for (auto i : correct_wrong_number)
+        {
+            if (i.first != 0 || i.second != 0)
+                total_participate++;
+        }
+
+        cout << "Challenge Progress Report:" << endl << endl;
+        cout << "Day of the Challenge: " << day << endl;
+        cout << "Streak: " << streak << endl;
+        cout << "Total Days Participated: " << total_participate << endl;
+        cout << "Mastered Flashcards: " << mastered_number << endl;
+        cout << endl << "Keep up the great work! You're making steady progress toward mastering your flashcards." << endl;
+    }
+
 private:
     Box daily;
     Box three_day;
@@ -200,6 +217,7 @@ private:
     int day = 1;
     int streak = 0;
     bool been_reviewed = false;
+    int mastered_number = 0;
     vector<pair<int, int>> correct_wrong_number = {{0, 0}};
 
     void addNewCard(string question, string answer)
@@ -213,23 +231,28 @@ private:
         string answer;
         for (auto card : cards)
         {
-            if (card->is_reviewed == true) continue;
+            if (card->is_reviewed == true)
+                continue;
             card->is_reviewed = true;
 
-            cout << "Flashcard: " << card->getQuestion() << endl<< "Your answer: ";
+            cout << "Flashcard: " << card->getQuestion() << endl
+                 << "Your answer: ";
 
             getline(cin, answer);
-            
+
             if (answer == card->getAnswer())
             {
                 correct_wrong_number.back().first += 1;
                 cout << endl << "Your answer was correct! Well done, keep it up!" << endl;
                 box->sendToNext(card, next);
+                if (next == nullptr) // it means the card is going out from monthly box
+                    mastered_number += 1;
             }
             else
             {
                 correct_wrong_number.back().second += 1;
-                cout << endl << "Your answer was incorrect. Don't worry! The correct answer is: ";
+                cout << endl
+                     << "Your answer was incorrect. Don't worry! The correct answer is: ";
                 cout << card->getAnswer() << ". Keep practicing!" << endl;
                 card->incWrongAns();
                 if (card->getWrongAns() == 2)
