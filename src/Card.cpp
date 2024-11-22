@@ -1,6 +1,6 @@
 #include "Card.hpp"
 
-Card::Card(string q, string a, int w = 0)
+Card::Card(string q, string a, int w)
 {
     question = q;
     answer = a;
